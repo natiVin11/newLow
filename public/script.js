@@ -2,7 +2,7 @@ let apartmentsData = [];  // נתונים של הדירות
 
 // פונקציה לטעינת הדירות
 function loadApartments() {
-    fetch("/get-apartments")  // כתובת מלאה עם פרוטוקול
+    fetch("2025.json")  // כתובת מלאה עם פרוטוקול
         .then(response => response.json())
         .then(data => {
             apartmentsData = data;
@@ -85,7 +85,7 @@ function updateApartmentStatus(building, apartment, status) {
     });
 
     // שמירה בשרת
-    fetch('/update-status', {  // כתובת מלאה עם פרוטוקול
+    fetch('2025.json', {  // כתובת מלאה עם פרוטוקול
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
