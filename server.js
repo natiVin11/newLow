@@ -3,6 +3,7 @@ const fs = require('fs');
 const app = express();
 const port = 3102;
 const path = require('path');
+const cors = require('cors');
 
 app.use(express.json());
 app.use(express.static('public')); // תיקיית סטטיים
