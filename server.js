@@ -6,11 +6,10 @@ const path = require('path');
 const cors = require('cors');
 
 app.use(express.json());
-app.use(express.static('public')); // תיקיית סטטיים
 
 // קריאה לקובץ הדירות
 app.get('/get-apartments', (req, res) => {
-    fs.readFile('2025.json', 'utf8', (err, data) => {
+    fs.readFile('public','2025.json', 'utf8', (err, data) => {
         if (err) {
             return res.status(500).json({ error: 'שגיאה בקריאת הקובץ' });
         }
