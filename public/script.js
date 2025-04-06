@@ -2,7 +2,7 @@ let apartmentsData = [];  // נתונים של הדירות
 
 // פונקציה לטעינת הדירות
 function loadApartments() {
-    fetch('/get-apartments')
+    fetch('./get-apartments')
         .then(response => response.json())
         .then(data => {
             apartmentsData = data;
