@@ -2,7 +2,7 @@ let apartmentsData = [];  // נתונים של הדירות
 
 // פונקציה לטעינת הדירות
 function loadApartments() {
-    fetch('2025.json')
+    fetch('http://localhost:3102/get-apartments')  // כתובת מלאה עם פרוטוקול
         .then(response => response.json())
         .then(data => {
             apartmentsData = data;
@@ -85,7 +85,7 @@ function updateApartmentStatus(building, apartment, status) {
     });
 
     // שמירה בשרת
-    fetch('/update-status', {
+    fetch('http://localhost:3102/update-status', {  // כתובת מלאה עם פרוטוקול
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -96,13 +96,18 @@ function updateApartmentStatus(building, apartment, status) {
             status: status,
         }),
     })
-        .then(response => response.json())
-        .then(() => {
-            loadApartments();  // טוען מחדש את הדירות לאחר העדכון
-        })
-        .catch(error => {
-            console.error('שגיאה בעדכון הסטטוס:', error);
-        });
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(() => {
+        loadApartments();  // טוען מחדש את הדירות לאחר העדכון
+    })
+    .catch(error => {
+        console.error('שגיאה בעדכון הסטטוס:', error);
+    });
 }
 
 // פונקציה לעדכון הסיכום של הסטטוסים
