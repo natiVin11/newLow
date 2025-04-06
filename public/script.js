@@ -2,7 +2,7 @@ let apartmentsData = [];  // נתונים של הדירות
 
 // פונקציה לטעינת הדירות
 function loadApartments() {
-    fetch('2025.json')  // יש לוודא שהקובץ קיים בשרת המקומי או בשרת נתיב תקין
+    fetch('get-apartments')
         .then(response => response.json())
         .then(data => {
             apartmentsData = data;
@@ -40,11 +40,14 @@ function renderBuildings(data) {
 
 // פונקציה להציג או להסתיר את הדיירים בבניין
 function toggleApartmentsView(building, apartments, buildingDiv) {
+    // חפש את רשימת הדיירים אם היא קיימת כבר
     let existingApartmentsDiv = buildingDiv.querySelector('.apartments-list');
 
+    // אם יש כבר רשימה כזאת, נסיר אותה
     if (existingApartmentsDiv) {
         existingApartmentsDiv.remove();
     } else {
+        // אחרת, ניצור רשימה חדשה
         const apartmentsDiv = document.createElement('div');
         apartmentsDiv.classList.add('apartments-list');
 
@@ -81,8 +84,8 @@ function updateApartmentStatus(building, apartment, status) {
         return a;
     });
 
-    // שמירה בשרת (כדי להימנע משגיאה, יש לוודא שכתובת ה-URL נכונה)
-    fetch('2025.json', {  // אם אתה רוצה להשתמש בקובץ JSON בצורה מקומית, ייתכן שתצטרך להתקין שרת
+    // שמירה בשרת
+    fetch('http://localhost:3102/update-status', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -93,18 +96,13 @@ function updateApartmentStatus(building, apartment, status) {
             status: status,
         }),
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(() => {
-        loadApartments();  // טוען מחדש את הדירות לאחר העדכון
-    })
-    .catch(error => {
-        console.error('שגיאה בעדכון הסטטוס:', error);
-    });
+        .then(response => response.json())
+        .then(() => {
+            loadApartments();  // טוען מחדש את הדירות לאחר העדכון
+        })
+        .catch(error => {
+            console.error('שגיאה בעדכון הסטטוס:', error);
+        });
 }
 
 // פונקציה לעדכון הסיכום של הסטטוסים
@@ -134,6 +132,7 @@ function updateStatusSummary(data) {
 function searchApartments() {
     const query = document.getElementById('search-input').value.toLowerCase();
 
+    // מסננים את הדירות לפי שם, ת"ז וטלפון
     const filteredApartments = apartmentsData.filter(building => {
         return building.some(apartment =>
             apartment.דירה.toLowerCase().includes(query) ||
@@ -142,6 +141,7 @@ function searchApartments() {
         );
     });
 
+    // הצגת התוצאות של החיפוש
     renderBuildings(filteredApartments);
     updateStatusSummary(filteredApartments);
 }
