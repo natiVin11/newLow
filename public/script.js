@@ -2,7 +2,7 @@ let apartmentsData = [];  // נתונים של הדירות
 
 // פונקציה לטעינת הדירות
 function loadApartments() {
-    fetch('/get-apartments')  // כתובת מלאה עם פרוטוקול
+    fetch("/get-apartments")  // כתובת מלאה עם פרוטוקול
         .then(response => response.json())
         .then(data => {
             apartmentsData = data;
